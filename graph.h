@@ -15,8 +15,8 @@ struct _Graph {
   GtkWidget* widget;
 };
 
-gboolean graph_update(gpointer data);
+gboolean graph_update(Graph* g);
 void graph_draw(GtkWidget* widget, cairo_t* cr, gpointer data);
 GtkWidget* graph_init(Graph* g);
 
-gdouble graph_max_static(Graph* g);
+gdouble graph_max_simple(Graph* g);

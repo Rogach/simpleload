@@ -4,8 +4,7 @@
 #include "graph.h"
 #include "config.h"
 
-gboolean graph_update(gpointer data) {
-  Graph* g = (Graph*) data;
+gboolean graph_update(Graph* g) {
   GtkAllocation* alloc = g_new(GtkAllocation, 1);
   gtk_widget_get_allocation(g->widget, alloc);
   if (g->width != alloc->width || g->height != alloc->height) {
@@ -87,10 +86,18 @@ GtkWidget* graph_init(Graph* g) {
   GtkWidget* da = gtk_drawing_area_new();
   g->widget = da;
   g_signal_connect(da, "draw", G_CALLBACK(graph_draw), g);
-  g_timeout_add(UPDATE_INTERVAL, graph_update, g);
   return da;
 }
 
-gdouble graph_max_static(Graph* g) {
-  return 4000000;
+gdouble graph_max_simple(Graph* g) {
+  gdouble max = 0;
+  for (int t = 0; t < g->width; t++) {
+    gdouble sum = 0;
+    for (int i = 0; i < g->measure_count; i++) {
+      Measure* meas = g->measures + i;
+      sum += meas->data[t];
+    }
+    if (sum > max) max = sum;
+  }
+  return max;
 }

@@ -3,9 +3,13 @@
 
 #include "graph.h"
 #include "config.h"
+#include "state.h"
 
 int main(int argc, char* argv[]) {
   gtk_init(&argc, &argv);
+
+  // init state variables eagerly
+  glibtop_get_cpu(&new_cpu);
 
   GtkWidget* window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "multiload");
@@ -25,19 +29,16 @@ int main(int argc, char* argv[]) {
   gtk_container_add(GTK_CONTAINER(window), box);
 
   Graph* graph_cpu = malloc(sizeof(Graph));
-  graph_cpu->get_max = graph_max_static;
-  graph_cpu->measure_count = 3;
-
+  graph_cpu->get_max = graph_max_simple;
+  graph_cpu->measure_count = 5;
   graph_cpu->measures = malloc(sizeof(Measure) * graph_cpu->measure_count);
-  measure_init(graph_cpu->measures, small_rand, "#ff0000");
-  measure_init(graph_cpu->measures + 1, small_rand, "#00ff00");
-  measure_init(graph_cpu->measures + 2, small_rand, "#0000ff");
+  measure_init(graph_cpu->measures + 0, measure_cpu_user, COLOR_CPU_USER);
+  measure_init(graph_cpu->measures + 1, measure_cpu_nice, COLOR_CPU_NICE);
+  measure_init(graph_cpu->measures + 2, measure_cpu_sys, COLOR_CPU_SYSTEM);
+  measure_init(graph_cpu->measures + 3, measure_cpu_iowait, COLOR_CPU_IOWAIT);
+  measure_init(graph_cpu->measures + 4, measure_cpu_idle, COLOR_CPU_IDLE);
+  g_timeout_add(UPDATE_INTERVAL, update_cpu, graph_cpu);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_cpu), TRUE, TRUE, 0);
-
-  Graph* graph_mem = malloc(sizeof(Graph));
-  graph_mem->get_max = graph_max_static;
-  graph_mem->measure_count = 0;
-  gtk_box_pack_start(GTK_BOX(box), graph_init(graph_mem), TRUE, TRUE, 0);
 
   gtk_widget_show_all(window);
   gtk_main();

@@ -13,4 +13,8 @@ void measure_init(Measure* meas, GetMeasure measure_func, gchar* color);
 void measure_init_data(Measure* meas, guint width);
 void measure_poll_next(Measure* meas, guint width);
 
-gdouble small_rand();
+gdouble measure_cpu_user();
+gdouble measure_cpu_nice();
+gdouble measure_cpu_sys();
+gdouble measure_cpu_iowait();
+gdouble measure_cpu_idle();

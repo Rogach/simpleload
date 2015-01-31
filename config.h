@@ -6,3 +6,8 @@
 
 #define COLOR_BACKGROUND "#494949"
 #define COLOR_BLACK "#000000"
+#define COLOR_CPU_USER "#0072b2"
+#define COLOR_CPU_SYSTEM "#0091e5"
+#define COLOR_CPU_NICE "#00a2fe"
+#define COLOR_CPU_IOWAIT "ff0000"
+#define COLOR_CPU_IDLE "#000000"
