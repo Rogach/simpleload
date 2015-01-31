@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <math.h>
 
 #include "graph.h"
 #include "config.h"
@@ -103,4 +104,25 @@ gdouble graph_max_simple(Graph* g) {
     if (sum > max) max = sum;
   }
   return max;
+}
+
+gdouble graph_max_stepped_mb(Graph* g) {
+  gdouble max = graph_max_simple(g);
+  gdouble lg = log10(max);
+  gint pw;
+  if (lg < 6) {
+    pw = 6;
+  } else {
+    pw = ceil(lg);
+  }
+  return pow(10, pw);
+}
+
+gdouble graph_max_min_mb(Graph* g) {
+  gdouble max = graph_max_simple(g);
+  if (max < 1024 * 1024) {
+    return 1024 * 1024;
+  } else {
+    return max;
+  }
 }

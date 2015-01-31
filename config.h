@@ -1,6 +1,6 @@
 #define WINDOW_X 326
 #define WINDOW_Y 0
-#define WINDOW_WIDTH 100
+#define WINDOW_WIDTH 240
 #define WINDOW_HEIGHT 25
 #define UPDATE_INTERVAL 1000/15
 
@@ -18,3 +18,6 @@
 #define COLOR_MEM_BUFFER "#00fe81"
 #define COLOR_MEM_CACHED "#a9f4cf"
 #define COLOR_MEM_FREE "#000000"
+
+#define COLOR_DISK_READ "#0d8f1d"
+#define COLOR_DISK_WRITE "#b90013"

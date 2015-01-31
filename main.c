@@ -9,7 +9,8 @@ int main(int argc, char* argv[]) {
   gtk_init(&argc, &argv);
 
   // init state variables eagerly
-  glibtop_get_cpu(&new_cpu);
+  update_cpu();
+  update_disk();
 
   GtkWidget* window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "multiload");
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
   measure_init(graph_cpu->measures + 2, measure_cpu_sys, COLOR_CPU_SYSTEM);
   measure_init(graph_cpu->measures + 3, measure_cpu_iowait, COLOR_CPU_IOWAIT);
   measure_init(graph_cpu->measures + 4, measure_cpu_idle, COLOR_CPU_IDLE);
-  g_timeout_add(UPDATE_INTERVAL, update_cpu, graph_cpu);
+  g_timeout_add(UPDATE_INTERVAL, update_cpu_graph, graph_cpu);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_cpu), TRUE, TRUE, 0);
 
   Graph* graph_mem = malloc(sizeof(Graph));
@@ -49,8 +50,17 @@ int main(int argc, char* argv[]) {
   measure_init(graph_mem->measures + 2, measure_mem_buffer, COLOR_MEM_BUFFER);
   measure_init(graph_mem->measures + 3, measure_mem_cached, COLOR_MEM_CACHED);
   measure_init(graph_mem->measures + 4, measure_mem_free, COLOR_MEM_FREE);
-  g_timeout_add(UPDATE_INTERVAL, update_mem, graph_mem);
+  g_timeout_add(UPDATE_INTERVAL, update_mem_graph, graph_mem);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_mem), TRUE, TRUE, 0);
+
+  Graph* graph_disk = malloc(sizeof(Graph));
+  graph_disk->get_max = graph_max_min_mb;
+  graph_disk->measure_count = 2;
+  graph_disk->measures = malloc(sizeof(Measure) * graph_disk->measure_count);
+  measure_init(graph_disk->measures + 0, measure_disk_read, COLOR_DISK_READ);
+  measure_init(graph_disk->measures + 1, measure_disk_write, COLOR_DISK_WRITE);
+  g_timeout_add(UPDATE_INTERVAL, update_disk_graph, graph_disk);
+  gtk_box_pack_start(GTK_BOX(box), graph_init(graph_disk), TRUE, TRUE, 0);
 
   gtk_widget_show_all(window);
   gtk_main();

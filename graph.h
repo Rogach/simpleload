@@ -20,3 +20,5 @@ void graph_draw(GtkWidget* widget, cairo_t* cr, gpointer data);
 GtkWidget* graph_init(Graph* g);
 
 gdouble graph_max_simple(Graph* g);
+gdouble graph_max_stepped_mb(Graph* g);
+gdouble graph_max_min_mb(Graph* g);
