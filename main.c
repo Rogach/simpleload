@@ -40,6 +40,18 @@ int main(int argc, char* argv[]) {
   g_timeout_add(UPDATE_INTERVAL, update_cpu, graph_cpu);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_cpu), TRUE, TRUE, 0);
 
+  Graph* graph_mem = malloc(sizeof(Graph));
+  graph_mem->get_max = graph_max_simple;
+  graph_mem->measure_count = 5;
+  graph_mem->measures = malloc(sizeof(Measure) * graph_mem->measure_count);
+  measure_init(graph_mem->measures + 0, measure_mem_user, COLOR_MEM_USER);
+  measure_init(graph_mem->measures + 1, measure_mem_shared, COLOR_MEM_SHARED);
+  measure_init(graph_mem->measures + 2, measure_mem_buffer, COLOR_MEM_BUFFER);
+  measure_init(graph_mem->measures + 3, measure_mem_cached, COLOR_MEM_CACHED);
+  measure_init(graph_mem->measures + 4, measure_mem_free, COLOR_MEM_FREE);
+  g_timeout_add(UPDATE_INTERVAL, update_mem, graph_mem);
+  gtk_box_pack_start(GTK_BOX(box), graph_init(graph_mem), TRUE, TRUE, 0);
+
   gtk_widget_show_all(window);
   gtk_main();
   return 0;

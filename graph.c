@@ -30,7 +30,10 @@ gboolean graph_update(Graph* g) {
   }
 
   gdouble max = g->get_max(g);
-  guint* stack = calloc(g->width, sizeof(guint));
+  gdouble* stack = malloc(g->width * sizeof(gdouble));
+  for (int t = 0; t < g->width; t++) {
+    stack[t] = 0;
+  }
 
   cairo_t* cr = cairo_create(g->surface);
 
