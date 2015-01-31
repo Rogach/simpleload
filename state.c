@@ -5,12 +5,12 @@
 #include "state.h"
 #include "graph.h"
 
-void update_cpu() {
+void update_cpu_stats() {
   old_cpu = new_cpu;
   glibtop_get_cpu(&new_cpu);
 }
 gboolean update_cpu_graph(gpointer data) {
-  update_cpu();
+  update_cpu_stats();
   graph_update((Graph*) data);
   return TRUE;
 }
@@ -58,7 +58,7 @@ gdouble measure_mem_free() {
   return mem.total - mem.user - mem.shared - mem.buffer - mem.cached;
 }
 
-void update_disk() {
+void update_disk_stats() {
   old_disk_read = new_disk_read;
   old_disk_write = new_disk_write;
   new_disk_read = 0;
@@ -82,7 +82,7 @@ void update_disk() {
   g_free(mountentries);
 }
 gboolean update_disk_graph(gpointer data) {
-  update_disk();
+  update_disk_stats();
   graph_update((Graph*) data);
   return TRUE;
 }
@@ -91,4 +91,43 @@ gdouble measure_disk_read() {
 }
 gdouble measure_disk_write() {
   return new_disk_write - old_disk_write;
+}
+
+void update_net_stats() {
+  old_net_in = new_net_in;
+  old_net_out = new_net_out;
+  old_net_local = new_net_local;
+  new_net_in = 0;
+  new_net_out = 0;
+  new_net_local = 0;
+
+  glibtop_netlist netlist;
+  gchar** devices = glibtop_get_netlist(&netlist);
+  for (int i = 0; i < netlist.number; i++) {
+    glibtop_netload netload;
+    glibtop_get_netload(&netload, devices[i]);
+    if (!(netload.if_flags & (1L << GLIBTOP_IF_FLAGS_UP))) continue;
+    if (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_LOOPBACK)) {
+      new_net_local += netload.bytes_in;
+      continue;
+    }
+    new_net_in += netload.bytes_in;
+    new_net_out += netload.bytes_out;
+  }
+
+  g_strfreev(devices);
+}
+gboolean update_net_graph(gpointer data) {
+  update_net_stats();
+  graph_update((Graph*) data);
+  return TRUE;
+}
+gdouble measure_net_in() {
+  return new_net_in - old_net_in;
+}
+gdouble measure_net_out() {
+  return new_net_out - old_net_out;
+}
+gdouble measure_net_local() {
+  return new_net_local - old_net_local;
 }

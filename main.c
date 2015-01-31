@@ -9,8 +9,9 @@ int main(int argc, char* argv[]) {
   gtk_init(&argc, &argv);
 
   // init state variables eagerly
-  update_cpu();
-  update_disk();
+  update_cpu_stats();
+  update_disk_stats();
+  update_net_stats();
 
   GtkWidget* window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "multiload");
@@ -61,6 +62,16 @@ int main(int argc, char* argv[]) {
   measure_init(graph_disk->measures + 1, measure_disk_write, COLOR_DISK_WRITE);
   g_timeout_add(UPDATE_INTERVAL, update_disk_graph, graph_disk);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_disk), TRUE, TRUE, 0);
+
+  Graph* graph_net = malloc(sizeof(Graph));
+  graph_net->get_max = graph_max_min_mb;
+  graph_net->measure_count = 3;
+  graph_net->measures = malloc(sizeof(Measure) * graph_net->measure_count);
+  measure_init(graph_net->measures + 0, measure_net_in, COLOR_NET_IN);
+  measure_init(graph_net->measures + 1, measure_net_out, COLOR_NET_OUT);
+  measure_init(graph_net->measures + 2, measure_net_local, COLOR_NET_LOCAL);
+  g_timeout_add(UPDATE_INTERVAL, update_net_graph, graph_net);
+  gtk_box_pack_start(GTK_BOX(box), graph_init(graph_net), TRUE, TRUE, 0);
 
   gtk_widget_show_all(window);
   gtk_main();

@@ -120,8 +120,9 @@ gdouble graph_max_stepped_mb(Graph* g) {
 
 gdouble graph_max_min_mb(Graph* g) {
   gdouble max = graph_max_simple(g);
-  if (max < 1024 * 1024) {
-    return 1024 * 1024;
+  gdouble threshold = 1024 * 1024 / (1000 / UPDATE_INTERVAL);
+  if (max < threshold) {
+    return threshold;
   } else {
     return max;
   }
