@@ -1,6 +1,6 @@
-#define WINDOW_X 326
+#define WINDOW_X 230
 #define WINDOW_Y 0
-#define WINDOW_WIDTH 240
+#define WINDOW_WIDTH 336
 #define WINDOW_HEIGHT 25
 #define UPDATE_INTERVAL (1000/15)
 

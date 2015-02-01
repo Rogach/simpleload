@@ -5,9 +5,18 @@
 #include "state.h"
 #include "graph.h"
 
+/** returns number of nanoseconds between two timespecs */
+long timespec_subtract(struct timespec* after, struct timespec* before) {
+  return (after->tv_sec - before->tv_sec)*1000000000 + (after->tv_nsec - before->tv_nsec);
+}
+
 void update_cpu_stats() {
   old_cpu = new_cpu;
   glibtop_get_cpu(&new_cpu);
+
+  old_cpu_poll_time = new_cpu_poll_time;
+  clock_gettime(CLOCK_MONOTONIC, &new_cpu_poll_time);
+  cpu_dt_corr = 1000000000 / (gdouble) timespec_subtract(&new_cpu_poll_time, &old_cpu_poll_time);
 }
 gboolean update_cpu_graph(gpointer data) {
   update_cpu_stats();
@@ -16,21 +25,21 @@ gboolean update_cpu_graph(gpointer data) {
 }
 
 gdouble measure_cpu_user() {
-  return new_cpu.user - old_cpu.user;
+  return (new_cpu.user - old_cpu.user) * cpu_dt_corr;
 }
 gdouble measure_cpu_nice() {
-  return new_cpu.nice - old_cpu.nice;
+  return (new_cpu.nice - old_cpu.nice) * cpu_dt_corr;
 }
 gdouble measure_cpu_sys() {
-  return new_cpu.sys - old_cpu.sys;
+  return (new_cpu.sys - old_cpu.sys) * cpu_dt_corr;
 }
 gdouble measure_cpu_iowait() {
   gdouble old = old_cpu.iowait + old_cpu.irq + old_cpu.softirq;
   gdouble new = new_cpu.iowait + new_cpu.irq + new_cpu.softirq;
-  return new - old;
+  return (new - old) * cpu_dt_corr;
 }
 gdouble measure_cpu_idle() {
-  return new_cpu.idle - old_cpu.idle;
+  return (new_cpu.idle - old_cpu.idle) * cpu_dt_corr;
 }
 
 gboolean update_mem_graph(gpointer data) {
@@ -80,6 +89,10 @@ void update_disk_stats() {
   }
 
   g_free(mountentries);
+
+  old_disk_poll_time = new_disk_poll_time;
+  clock_gettime(CLOCK_MONOTONIC, &new_disk_poll_time);
+  disk_dt_corr = 1000000000 / (gdouble) timespec_subtract(&new_disk_poll_time, &old_disk_poll_time);
 }
 gboolean update_disk_graph(gpointer data) {
   update_disk_stats();
@@ -87,10 +100,10 @@ gboolean update_disk_graph(gpointer data) {
   return TRUE;
 }
 gdouble measure_disk_read() {
-  return new_disk_read - old_disk_read;
+  return (new_disk_read - old_disk_read) * disk_dt_corr;
 }
 gdouble measure_disk_write() {
-  return new_disk_write - old_disk_write;
+  return (new_disk_write - old_disk_write) * disk_dt_corr;
 }
 
 void update_net_stats() {
@@ -116,6 +129,10 @@ void update_net_stats() {
   }
 
   g_strfreev(devices);
+
+  old_net_poll_time = new_net_poll_time;
+  clock_gettime(CLOCK_MONOTONIC, &new_net_poll_time);
+  net_dt_corr = 1000000000 / (gdouble) timespec_subtract(&new_net_poll_time, &old_net_poll_time);
 }
 gboolean update_net_graph(gpointer data) {
   update_net_stats();
@@ -123,11 +140,11 @@ gboolean update_net_graph(gpointer data) {
   return TRUE;
 }
 gdouble measure_net_in() {
-  return new_net_in - old_net_in;
+  return (new_net_in - old_net_in) * net_dt_corr;
 }
 gdouble measure_net_out() {
-  return new_net_out - old_net_out;
+  return (new_net_out - old_net_out) * net_dt_corr;
 }
 gdouble measure_net_local() {
-  return new_net_local - old_net_local;
+  return (new_net_local - old_net_local) * net_dt_corr;
 }
