@@ -63,6 +63,9 @@ gboolean graph_update(Graph* g) {
   cairo_destroy(cr);
 
   gtk_widget_queue_draw(g->widget);
+
+  free(stack);
+
   return TRUE;
 }
 
