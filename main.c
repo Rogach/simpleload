@@ -19,15 +19,14 @@ int main(int argc, char* argv[]) {
   gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DOCK);
   gtk_window_set_default_size(GTK_WINDOW(window), WINDOW_WIDTH, WINDOW_HEIGHT);
   gtk_window_move(GTK_WINDOW(window), WINDOW_X, WINDOW_Y);
-  gtk_window_set_has_resize_grip(GTK_WINDOW(window), FALSE);
   GdkRGBA background;
   gdk_rgba_parse(&background, COLOR_BACKGROUND);
   gtk_widget_override_background_color(window, GTK_STATE_FLAG_NORMAL, &background);
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
   GtkWidget* box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 1);
-  gtk_widget_set_margin_left(box, 1);
-  gtk_widget_set_margin_right(box, 1);
+  gtk_widget_set_margin_start(box, 1);
+  gtk_widget_set_margin_end(box, 1);
   gtk_container_add(GTK_CONTAINER(window), box);
 
   Graph* graph_cpu = malloc(sizeof(Graph));
