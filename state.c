@@ -52,7 +52,7 @@ gboolean update_mem_graph(gpointer data) {
 }
 
 gdouble measure_mem_user() {
-  return mem.user;
+  return mem.total - mem.shared - mem.buffer - mem.cached - mem.free;
 }
 gdouble measure_mem_shared() {
   return mem.shared;
@@ -64,7 +64,7 @@ gdouble measure_mem_cached() {
   return mem.cached;
 }
 gdouble measure_mem_free() {
-  return mem.total - mem.user - mem.shared - mem.buffer - mem.cached;
+  return mem.free;
 }
 
 void update_disk_stats() {
