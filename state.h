@@ -8,11 +8,6 @@
 #include <glibtop/netload.h>
 #include <time.h>
 
-glibtop_cpu old_cpu;
-glibtop_cpu new_cpu;
-struct timespec old_cpu_poll_time;
-struct timespec new_cpu_poll_time;
-gdouble cpu_dt_corr;
 void update_cpu_stats();
 gboolean update_cpu_graph(gpointer data);
 
@@ -22,7 +17,6 @@ gdouble measure_cpu_sys();
 gdouble measure_cpu_iowait();
 gdouble measure_cpu_idle();
 
-glibtop_mem mem;
 gboolean update_mem_graph(gpointer data);
 
 gdouble measure_mem_user();
@@ -31,29 +25,12 @@ gdouble measure_mem_buffer();
 gdouble measure_mem_cached();
 gdouble measure_mem_free();
 
-guint64 old_disk_read;
-guint64 old_disk_write;
-guint64 new_disk_read;
-guint64 new_disk_write;
-struct timespec old_disk_poll_time;
-struct timespec new_disk_poll_time;
-gdouble disk_dt_corr;
 void update_disk_stats();
 gboolean update_disk_graph(gpointer data);
 
 gdouble measure_disk_read();
 gdouble measure_disk_write();
 
-
-gulong old_net_in;
-gulong old_net_out;
-gulong old_net_local;
-gulong new_net_in;
-gulong new_net_out;
-gulong new_net_local;
-struct timespec old_net_poll_time;
-struct timespec new_net_poll_time;
-gdouble net_dt_corr;
 void update_net_stats();
 gboolean update_net_graph(gpointer data);
 
