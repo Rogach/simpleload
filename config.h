@@ -1,4 +1,4 @@
-#define WINDOW_X 134
+#define WINDOW_X 128
 #define WINDOW_Y 0
 #define WINDOW_WIDTH 336
 #define WINDOW_HEIGHT 25
