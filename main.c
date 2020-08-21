@@ -37,13 +37,12 @@ int main(int argc, char* argv[]) {
 
   Graph* graph_cpu = malloc(sizeof(Graph));
   graph_cpu->get_max = graph_max_simple;
-  graph_cpu->measure_count = 5;
+  graph_cpu->measure_count = 4;
   graph_cpu->measures = malloc(sizeof(Measure) * graph_cpu->measure_count);
   measure_init(graph_cpu->measures + 0, measure_cpu_user, COLOR_CPU_USER);
-  measure_init(graph_cpu->measures + 1, measure_cpu_nice, COLOR_CPU_NICE);
-  measure_init(graph_cpu->measures + 2, measure_cpu_sys, COLOR_CPU_SYSTEM);
-  measure_init(graph_cpu->measures + 3, measure_cpu_iowait, COLOR_CPU_IOWAIT);
-  measure_init(graph_cpu->measures + 4, measure_cpu_idle, COLOR_CPU_IDLE);
+  measure_init(graph_cpu->measures + 1, measure_cpu_sys, COLOR_CPU_SYSTEM);
+  measure_init(graph_cpu->measures + 2, measure_cpu_iowait, COLOR_CPU_IOWAIT);
+  measure_init(graph_cpu->measures + 3, measure_cpu_idle, COLOR_CPU_IDLE);
   g_timeout_add(UPDATE_INTERVAL, update_cpu_graph, graph_cpu);
   gtk_box_pack_start(GTK_BOX(box), graph_init(graph_cpu), TRUE, TRUE, 0);
 

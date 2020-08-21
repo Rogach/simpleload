@@ -14,17 +14,10 @@ long timespec_subtract(struct timespec* after, struct timespec* before) {
 
 glibtop_cpu old_cpu;
 glibtop_cpu new_cpu;
-struct timespec old_cpu_poll_time;
-struct timespec new_cpu_poll_time;
-gdouble cpu_dt_corr;
 
 void update_cpu_stats() {
   old_cpu = new_cpu;
   glibtop_get_cpu(&new_cpu);
-
-  old_cpu_poll_time = new_cpu_poll_time;
-  clock_gettime(CLOCK_MONOTONIC, &new_cpu_poll_time);
-  cpu_dt_corr = 1000000000 / (gdouble) timespec_subtract(&new_cpu_poll_time, &old_cpu_poll_time);
 }
 gboolean update_cpu_graph(gpointer data) {
   update_cpu_stats();
@@ -33,21 +26,20 @@ gboolean update_cpu_graph(gpointer data) {
 }
 
 gdouble measure_cpu_user() {
-  return (new_cpu.user - old_cpu.user) * cpu_dt_corr;
-}
-gdouble measure_cpu_nice() {
-  return (new_cpu.nice - old_cpu.nice) * cpu_dt_corr;
+  gdouble old = old_cpu.user + old_cpu.nice;
+  gdouble new = new_cpu.user + new_cpu.nice;
+  return (new - old) / (new_cpu.total - old_cpu.total);
 }
 gdouble measure_cpu_sys() {
-  return (new_cpu.sys - old_cpu.sys) * cpu_dt_corr;
+  return ((gdouble) (new_cpu.sys - old_cpu.sys)) / (new_cpu.total - old_cpu.total);
 }
 gdouble measure_cpu_iowait() {
   gdouble old = old_cpu.iowait + old_cpu.irq + old_cpu.softirq;
   gdouble new = new_cpu.iowait + new_cpu.irq + new_cpu.softirq;
-  return (new - old) * cpu_dt_corr;
+  return (new - old) / (new_cpu.total - old_cpu.total);
 }
 gdouble measure_cpu_idle() {
-  return (new_cpu.idle - old_cpu.idle) * cpu_dt_corr;
+  return ((gdouble) (new_cpu.idle - old_cpu.idle)) / (new_cpu.total - old_cpu.total);
 }
 
 /*** RAM ***/

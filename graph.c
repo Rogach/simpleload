@@ -51,10 +51,10 @@ gboolean graph_update(Graph* g) {
     Measure* meas = g->measures + i;
     gdk_cairo_set_source_rgba(cr, &(meas->color));
     for (int t = 0; t < g->width; t++) {
-      guint ymin = stack[t] * g->height / max;
-      guint ymax = (stack[t] + meas->data[t]) * g->height / max;
-      cairo_move_to(cr, t - 0.5, g->height - ymin - 0.5);
-      cairo_line_to(cr, t - 0.5, g->height - ymax - 0.5);
+      gdouble ymin = round(stack[t] * g->height / max);
+      gdouble ymax = round((stack[t] + meas->data[t]) * g->height / max);
+      cairo_move_to(cr, t - 0.5, ymin + 0.5);
+      cairo_line_to(cr, t - 0.5, ymax + 0.5);
       stack[t] += meas->data[t];
     }
     cairo_stroke(cr);

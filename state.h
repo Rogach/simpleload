@@ -12,7 +12,6 @@ void update_cpu_stats();
 gboolean update_cpu_graph(gpointer data);
 
 gdouble measure_cpu_user();
-gdouble measure_cpu_nice();
 gdouble measure_cpu_sys();
 gdouble measure_cpu_iowait();
 gdouble measure_cpu_idle();
