@@ -56,16 +56,10 @@ gboolean update_mem_graph(gpointer data) {
 }
 
 gdouble measure_mem_user() {
-  return mem.total - mem.shared - mem.buffer - mem.cached - mem.free;
-}
-gdouble measure_mem_shared() {
-  return mem.shared;
-}
-gdouble measure_mem_buffer() {
-  return mem.buffer;
+  return mem.total - mem.buffer - mem.cached - mem.free;
 }
 gdouble measure_mem_cached() {
-  return mem.cached;
+  return mem.cached + mem.buffer;
 }
 gdouble measure_mem_free() {
   return mem.free;

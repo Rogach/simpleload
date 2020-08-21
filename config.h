@@ -12,11 +12,9 @@
 #define COLOR_CPU_IOWAIT "ff0000"
 #define COLOR_CPU_IDLE "#000000"
 
-#define COLOR_MEM_USER "#00b25b"
-#define COLOR_MEM_SHARED "#00e575"
-#define COLOR_MEM_BUFFER "#00fe81"
-#define COLOR_MEM_CACHED "#a9f4cf"
-#define COLOR_MEM_FREE "#000000"
+#define COLOR_MEM_USER "#c66f00"
+#define COLOR_MEM_CACHED "#4dc68d"
+#define COLOR_MEM_FREE "#00b25b"
 
 #define COLOR_DISK_READ "#0d8f1d"
 #define COLOR_DISK_WRITE "#b90013"

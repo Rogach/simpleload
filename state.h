@@ -19,8 +19,6 @@ gdouble measure_cpu_idle();
 gboolean update_mem_graph(gpointer data);
 
 gdouble measure_mem_user();
-gdouble measure_mem_shared();
-gdouble measure_mem_buffer();
 gdouble measure_mem_cached();
 gdouble measure_mem_free();
 
